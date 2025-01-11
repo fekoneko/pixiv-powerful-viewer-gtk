@@ -1,8 +1,13 @@
-use gtk::{glib, prelude::*, Application, ApplicationWindow};
+mod widgets;
+
+use gtk::{gio, glib, prelude::*, Application};
+use widgets::window::Window;
 
 const APP_ID: &str = "com.fekoneko.ppv.app";
 
 fn main() -> glib::ExitCode {
+    gio::resources_register_include!("ppv.gresource").expect("Failed to register resources.");
+
     let app = Application::builder().application_id(APP_ID).build();
     app.connect_activate(build_ui);
 
@@ -10,10 +15,6 @@ fn main() -> glib::ExitCode {
 }
 
 fn build_ui(app: &Application) {
-    let window = ApplicationWindow::builder()
-        .application(app)
-        .title("Pixiv Powerful Viewer")
-        .build();
-
+    let window = Window::new(app);
     window.present();
 }
