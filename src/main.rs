@@ -1,7 +1,7 @@
 mod widgets;
 
-use gtk::prelude::*;
-use gtk::{gio, glib, Application};
+use adw::prelude::*;
+use adw::{gio, glib, Application};
 use widgets::window::Window;
 
 const APP_ID: &str = "com.fekoneko.ppv.app";

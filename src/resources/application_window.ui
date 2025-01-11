@@ -4,5 +4,15 @@
     <property name="title">Pixiv Powerful Viewer</property>
     <property name="default-width">800</property>
     <property name="default-height">600</property>
+
+    <property name="titlebar">
+      <object class="GtkHeaderBar">
+        <child>
+          <object class="GtkButton">
+            <property name="icon-name">open-menu-symbolic</property>
+          </object>
+        </child>
+      </object>
+    </property>
   </template>
 </interface>

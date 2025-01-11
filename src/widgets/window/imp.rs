@@ -1,8 +1,8 @@
+use adw::glib;
+use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
-use gtk::subclass::prelude::*;
-use gtk::{glib, CompositeTemplate};
 
-#[derive(CompositeTemplate, Default)]
+#[derive(gtk::CompositeTemplate, Default)]
 #[template(resource = "/com/fekoneko/ppv/app/application_window.ui")]
 pub struct Window {}
 
