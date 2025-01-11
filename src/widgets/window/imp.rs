@@ -1,8 +1,9 @@
 use adw::glib;
 use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
+use gtk::CompositeTemplate;
 
-#[derive(gtk::CompositeTemplate, Default)]
+#[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/fekoneko/ppv/app/application_window.ui")]
 pub struct Window {}
 
@@ -10,7 +11,7 @@ pub struct Window {}
 impl ObjectSubclass for Window {
     const NAME: &'static str = "PpvApplicationWindow";
     type Type = super::Window;
-    type ParentType = gtk::ApplicationWindow;
+    type ParentType = adw::ApplicationWindow;
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
@@ -28,3 +29,5 @@ impl WidgetImpl for Window {}
 impl WindowImpl for Window {}
 
 impl ApplicationWindowImpl for Window {}
+
+impl AdwApplicationWindowImpl for Window {}
