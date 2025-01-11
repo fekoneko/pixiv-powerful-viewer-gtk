@@ -3,7 +3,7 @@ use gtk::subclass::prelude::*;
 use gtk::{glib, CompositeTemplate};
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/fekoneko/ppv/app/window.ui")]
+#[template(resource = "/com/fekoneko/ppv/app/application_window.ui")]
 pub struct Window {}
 
 #[glib::object_subclass]
