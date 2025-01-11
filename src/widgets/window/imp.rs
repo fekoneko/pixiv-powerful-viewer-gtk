@@ -1,5 +1,6 @@
 use glib::subclass::InitializingObject;
-use gtk::{glib, subclass::prelude::*, CompositeTemplate};
+use gtk::subclass::prelude::*;
+use gtk::{glib, CompositeTemplate};
 
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/fekoneko/ppv/app/window.ui")]
