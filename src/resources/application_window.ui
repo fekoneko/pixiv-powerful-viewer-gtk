@@ -32,7 +32,7 @@
                           </object>
                         </child>
                         <property name="content">
-                          <object class="PpvExplorerPanel" id="explorer_panel" />
+                          <object class="PpvExplorerPanel" />
                         </property>
                       </object>
                     </property>
@@ -54,7 +54,7 @@
                           </object>
                         </child>
                         <property name="content">
-                          <object class="PpvPreviewPanel" id="preview_panel" />
+                          <object class="PpvPreviewPanel" />
                         </property>
                       </object>
                     </property>
