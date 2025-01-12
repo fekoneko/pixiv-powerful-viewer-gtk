@@ -54,11 +54,7 @@
                           </object>
                         </child>
                         <property name="content">
-                          <object class="GtkFrame">
-                            <property name="margin-start">12</property>
-                            <property name="margin-end">12</property>
-                            <property name="margin-bottom">12</property>
-                          </object>
+                          <object class="PpvPreviewPanel" id="preview_panel" />
                         </property>
                       </object>
                     </property>

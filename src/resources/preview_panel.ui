@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="PpvPreviewPanel" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkFrame">
+        <property name="vexpand">True</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-bottom">12</property>
+      </object>
+    </child>
+  </template>
+</interface>

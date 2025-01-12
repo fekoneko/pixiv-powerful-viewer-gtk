@@ -3,5 +3,6 @@
   <gresource prefix="/com/fekoneko/ppv/app/">
     <file compressed="true" preprocess="xml-stripblanks">application_window.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">explorer_panel.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">preview_panel.ui</file>
   </gresource>
 </gresources>

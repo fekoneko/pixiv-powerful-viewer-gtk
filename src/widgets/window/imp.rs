@@ -5,6 +5,7 @@ use gtk::prelude::StaticTypeExt;
 use gtk::CompositeTemplate;
 
 use crate::widgets::explorer_panel::ExplorerPanel;
+use crate::widgets::preview_panel::PreviewPanel;
 
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/fekoneko/ppv/app/application_window.ui")]
@@ -18,6 +19,7 @@ impl ObjectSubclass for Window {
 
     fn class_init(klass: &mut Self::Class) {
         ExplorerPanel::ensure_type();
+        PreviewPanel::ensure_type();
 
         klass.bind_template();
     }
