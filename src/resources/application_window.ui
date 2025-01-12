@@ -32,38 +32,7 @@
                           </object>
                         </child>
                         <property name="content">
-                          <object class="GtkScrolledWindow">
-                            <property name="child">
-                              <object class="GtkBox">
-                                <property name="orientation">vertical</property>
-                                <!-- TODO: implement -->
-                                <child>
-                                  <object class="GtkFrame">
-                                    <property name="height-request">100</property>
-                                    <property name="margin-start">12</property>
-                                    <property name="margin-end">12</property>
-                                    <property name="margin-bottom">12</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkFrame">
-                                    <property name="height-request">100</property>
-                                    <property name="margin-start">12</property>
-                                    <property name="margin-end">12</property>
-                                    <property name="margin-bottom">12</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkFrame">
-                                    <property name="height-request">100</property>
-                                    <property name="margin-start">12</property>
-                                    <property name="margin-end">12</property>
-                                    <property name="margin-bottom">12</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </property>
-                          </object>
+                          <object class="PpvExplorerPanel" id="explorer_panel" />
                         </property>
                       </object>
                     </property>
@@ -89,7 +58,6 @@
                             <property name="margin-start">12</property>
                             <property name="margin-end">12</property>
                             <property name="margin-bottom">12</property>
-                            <!-- TODO: implement -->
                           </object>
                         </property>
                       </object>
