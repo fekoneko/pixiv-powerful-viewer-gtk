@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="PpvCollectionView" parent="GtkBox">
+    <child>
+      <object class="AdwNavigationSplitView">
+        <property name="hexpand">true</property>
+        <property name="sidebar-width-fraction">0.4</property>
+        <property name="max-sidebar-width">400</property>
+        <property name="sidebar">
+          <object class="AdwNavigationPage">
+            <property name="title" translatable="no">Collection Name</property>
+            <property name="child">
+              <object class="AdwToolbarView">
+                <child type="top">
+                  <object class="AdwHeaderBar">
+                    <child type="start">
+                      <object class="GtkButton">
+                        <property name="icon-name">folder-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Open Collection</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <property name="content">
+                  <object class="PpvExplorerPanel" />
+                </property>
+              </object>
+            </property>
+          </object>
+        </property>
+        <property name="content">
+          <object class="AdwNavigationPage">
+            <property name="title" translatable="yes">Work Name</property>                    
+            <property name="child">
+              <object class="AdwToolbarView">
+                <child type="top">
+                  <object class="AdwHeaderBar">
+                    <child type="end">
+                      <object class="GtkMenuButton">
+                        <property name="icon-name">open-menu-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Collection Menu</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <property name="content">
+                  <object class="PpvPreviewPanel" />
+                </property>
+              </object>
+            </property>
+          </object>
+        </property>
+      </object>
+    </child>
+  </template>
+</interface>

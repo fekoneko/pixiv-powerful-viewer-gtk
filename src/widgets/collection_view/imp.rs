@@ -1,26 +1,25 @@
 use adw::glib;
 use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
-use gtk::prelude::StaticTypeExt;
+use gtk::prelude::*;
 use gtk::CompositeTemplate;
 
 use crate::widgets::explorer_panel::ExplorerPanel;
 use crate::widgets::preview_panel::PreviewPanel;
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/fekoneko/ppv/app/application_window.ui")]
-pub struct Window {}
+#[template(resource = "/com/fekoneko/ppv/app/collection_view.ui")]
+pub struct CollectionView {}
 
 #[glib::object_subclass]
-impl ObjectSubclass for Window {
-    const NAME: &'static str = "PpvApplicationWindow";
-    type Type = super::Window;
-    type ParentType = adw::ApplicationWindow;
+impl ObjectSubclass for CollectionView {
+    const NAME: &'static str = "PpvCollectionView";
+    type Type = super::CollectionView;
+    type ParentType = gtk::Box;
 
     fn class_init(klass: &mut Self::Class) {
         ExplorerPanel::ensure_type();
         PreviewPanel::ensure_type();
-
         klass.bind_template();
     }
 
@@ -29,12 +28,8 @@ impl ObjectSubclass for Window {
     }
 }
 
-impl ObjectImpl for Window {}
+impl ObjectImpl for CollectionView {}
 
-impl WidgetImpl for Window {}
+impl WidgetImpl for CollectionView {}
 
-impl WindowImpl for Window {}
-
-impl ApplicationWindowImpl for Window {}
-
-impl AdwApplicationWindowImpl for Window {}
+impl BoxImpl for CollectionView {}
