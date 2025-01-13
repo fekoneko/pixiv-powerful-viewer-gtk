@@ -23,7 +23,5 @@ impl ObjectSubclass for ExplorerPanel {
 }
 
 impl ObjectImpl for ExplorerPanel {}
-
 impl WidgetImpl for ExplorerPanel {}
-
 impl BoxImpl for ExplorerPanel {}

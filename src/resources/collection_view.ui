@@ -14,7 +14,8 @@
                 <child type="top">
                   <object class="AdwHeaderBar">
                     <child type="start">
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="open_collection_button">
+                        <signal name="clicked" handler="handle_open_collection" swapped="true" />
                         <property name="icon-name">folder-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Open Collection</property>
                       </object>

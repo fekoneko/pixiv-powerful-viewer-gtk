@@ -1,7 +1,7 @@
 use adw::glib;
+use adw::prelude::*;
 use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
-use gtk::prelude::*;
 use gtk::CompositeTemplate;
 
 use crate::widgets::collection_view::CollectionView;
@@ -27,11 +27,7 @@ impl ObjectSubclass for ApplicationWindow {
 }
 
 impl ObjectImpl for ApplicationWindow {}
-
 impl WidgetImpl for ApplicationWindow {}
-
 impl WindowImpl for ApplicationWindow {}
-
 impl ApplicationWindowImpl for ApplicationWindow {}
-
 impl AdwApplicationWindowImpl for ApplicationWindow {}

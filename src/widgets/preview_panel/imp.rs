@@ -23,7 +23,5 @@ impl ObjectSubclass for PreviewPanel {
 }
 
 impl ObjectImpl for PreviewPanel {}
-
 impl WidgetImpl for PreviewPanel {}
-
 impl BoxImpl for PreviewPanel {}

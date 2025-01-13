@@ -1,3 +1,4 @@
+mod lib;
 mod widgets;
 
 use adw::prelude::*;
