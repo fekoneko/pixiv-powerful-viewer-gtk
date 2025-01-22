@@ -1,12 +1,10 @@
-use std::cell::RefCell;
-
 use adw::glib;
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
 use gtk::CompositeTemplate;
 
-use crate::lib::collection::Collection;
+use crate::library::collection::Collection;
 use crate::widgets::explorer_panel::ExplorerPanel;
 use crate::widgets::preview_panel::PreviewPanel;
 

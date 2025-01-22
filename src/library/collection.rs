@@ -21,13 +21,16 @@ impl Collection {
         let path = self.path.clone();
 
         fn parse_work(path: &PathBuf) -> io::Result<Work> {
+            // TODO: expensive blocking logic goes here
+            // (check if it's actually that expensive or of it's just IO bound)
+
             Ok(Work {
-                path: path.to_string_lossy().to_string(),
+                path: path.to_string_lossy().into_owned(),
                 title: path
                     .file_name()
                     .unwrap_or_default()
                     .to_string_lossy()
-                    .to_string(),
+                    .into_owned(),
             })
         }
 
