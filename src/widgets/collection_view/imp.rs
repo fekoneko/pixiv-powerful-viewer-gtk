@@ -13,7 +13,6 @@ use crate::widgets::preview_panel::PreviewPanel;
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/fekoneko/ppv/app/collection_view.ui")]
 pub struct CollectionView {
-    collection: RefCell<Option<Collection>>,
     #[template_child]
     open_collection_button: TemplateChild<gtk::Button>,
 }
@@ -45,19 +44,9 @@ impl CollectionView {
     #[template_callback]
     async fn handle_open_collection(&self) {
         let collection = Collection::new(String::from("/"));
-        self.collection.replace(Some(collection));
 
         self.open_collection_button.set_sensitive(false);
-        if let Ok((works, errors)) = self.collection.borrow().as_ref().unwrap().works().await {
-            print!(
-                "{}",
-                works
-                    .into_iter()
-                    .map(|work| format!("{} {}\n", work.title, work.path))
-                    .collect::<String>()
-            );
-            errors.into_iter().for_each(|error| print!("{:?}\n", error));
-        }
+        if let Ok((works, errors)) = collection.works().await {}
         self.open_collection_button.set_sensitive(true);
     }
 }
