@@ -22,7 +22,7 @@ impl Collection {
 
         fn parse_work(path: &PathBuf) -> io::Result<Work> {
             // TODO: expensive blocking logic goes here
-            // (check if it's actually that expensive or of it's just IO bound)
+            // (check if it's actually that expensive or if it's just IO bound)
 
             Ok(Work {
                 path: path.to_string_lossy().into_owned(),
