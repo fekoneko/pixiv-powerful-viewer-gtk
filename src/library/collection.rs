@@ -59,7 +59,6 @@ impl Collection {
                 if file_type.is_dir() {
                     read_dir(&entry.path(), errors, parse_join_handles);
                 } else if file_type.is_file() {
-                    // gio::spawn_blocking itself is very expensive
                     parse_join_handles.push(gio::spawn_blocking(move || parse_work(&entry.path())));
                 }
             }
