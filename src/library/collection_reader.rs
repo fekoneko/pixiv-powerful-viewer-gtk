@@ -6,13 +6,12 @@ use adw::gio;
 
 use super::work::Work;
 
-type ParseDirResult = (Vec<gio::JoinHandle<ParseWorkResult>>, Vec<io::Error>);
-type ParseWorkResult = io::Result<Work>;
+type ParseDirResult = (Vec<gio::JoinHandle<io::Result<Work>>>, Vec<io::Error>);
 
 pub struct CollectionReader {
     errors: Cell<Vec<io::Error>>,
     parse_dir_join_handle: Cell<gio::JoinHandle<ParseDirResult>>,
-    parse_work_join_handles: Cell<Option<Vec<gio::JoinHandle<ParseWorkResult>>>>,
+    parse_work_join_handles: Cell<Option<Vec<gio::JoinHandle<io::Result<Work>>>>>,
 }
 
 impl CollectionReader {
@@ -25,49 +24,37 @@ impl CollectionReader {
     }
 
     fn start_loading_works<'a>(path: PathBuf) -> gio::JoinHandle<ParseDirResult> {
-        fn parse_work(path: &PathBuf) -> ParseWorkResult {
-            // TODO: expensive blocking logic goes here
-            // (check if it's actually that expensive or if it's just IO bound)
-
-            Ok(Work {
-                path: path.to_string_lossy().into_owned(),
-                title: path
-                    .file_name()
-                    .unwrap_or_default()
-                    .to_string_lossy()
-                    .into_owned(),
-            })
-        }
-
         fn parse_dir(
-            path: PathBuf,
+            path: &PathBuf,
             errors: &mut Vec<io::Error>,
-            join_handles: &mut Vec<gio::JoinHandle<ParseWorkResult>>,
+            join_handles: &mut Vec<gio::JoinHandle<io::Result<Work>>>,
         ) {
             let entries = path.read_dir();
             let Ok(entries) = entries else {
                 errors.push(entries.unwrap_err());
                 return;
             };
-            let mut is_file_encountered = false;
 
             for entry in entries {
                 let Ok(entry) = entry else {
                     errors.push(entry.unwrap_err());
                     continue;
                 };
-                let file_type = entry.file_type();
-                let Ok(file_type) = file_type else {
-                    errors.push(file_type.unwrap_err());
+                let entry_type = entry.file_type();
+                let Ok(entry_type) = entry_type else {
+                    errors.push(entry_type.unwrap_err());
                     continue;
                 };
 
-                if file_type.is_dir() {
-                    parse_dir(entry.path(), errors, join_handles);
-                } else if !is_file_encountered && file_type.is_file() {
-                    is_file_encountered = true;
-                    let path = path.clone();
-                    join_handles.push(gio::spawn_blocking(move || parse_work(&path)));
+                let entry_path = entry.path();
+                if entry_type.is_dir() {
+                    parse_dir(&entry_path, errors, join_handles);
+                } else if entry_type.is_file()
+                    && entry_path
+                        .to_str()
+                        .is_some_and(|s| s.ends_with("-meta.txt"))
+                {
+                    join_handles.push(gio::spawn_blocking(move || Work::new(&entry_path)));
                 }
             }
         }
@@ -75,7 +62,7 @@ impl CollectionReader {
         gio::spawn_blocking(move || {
             let mut errors = Vec::new();
             let mut join_handles = Vec::new();
-            parse_dir(path.clone(), &mut errors, &mut join_handles);
+            parse_dir(&path, &mut errors, &mut join_handles);
 
             (join_handles, errors)
         })
