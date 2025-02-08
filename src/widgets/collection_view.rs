@@ -6,8 +6,9 @@ mod imp {
     use adw::subclass::prelude::*;
     use glib::subclass::InitializingObject;
     use gtk::CompositeTemplate;
+    use gtk::FileDialog;
 
-    use crate::library::collection::Collection;
+    use crate::library::collection_reader::CollectionReader;
     use crate::widgets::explorer_panel::ExplorerPanel;
     use crate::widgets::preview_panel::PreviewPanel;
 
@@ -44,10 +45,19 @@ mod imp {
     impl CollectionView {
         #[template_callback]
         async fn handle_open_collection(&self) {
-            let collection = Collection::new(String::from("/"));
-
             self.open_collection_button.set_sensitive(false);
-            if let Ok((works, errors)) = collection.works().await {}
+
+            let file_dialog = FileDialog::builder().title("Open Collection").build();
+            if let Ok(Some(path)) = file_dialog
+                .select_folder_future(None::<&gtk::Window>)
+                .await
+                .map(|dir| dir.path())
+            {
+                let mut collection_reader = CollectionReader::new(path);
+                while let Some(work) = collection_reader.next_work().await {
+                    println!("Loaded work: {}", work.title);
+                }
+            }
             self.open_collection_button.set_sensitive(true);
         }
     }
