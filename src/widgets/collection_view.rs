@@ -53,9 +53,13 @@ mod imp {
                 .await
                 .map(|dir| dir.path())
             {
-                let mut collection_reader = CollectionReader::new(path);
+                let (mut collection_reader, errors) = CollectionReader::new(path).await;
+                println!("Parsed collection structure with {} errors", errors.len());
                 while let Some(work) = collection_reader.next_work().await {
-                    println!("Loaded work: {}", work.title);
+                    match work {
+                        Ok(work) => println!("Loaded work {}", work.title),
+                        Err(error) => println!("Failed to load work: {}", error),
+                    }
                 }
             }
             self.open_collection_button.set_sensitive(true);
