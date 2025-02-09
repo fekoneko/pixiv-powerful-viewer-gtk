@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="PpvApplicationWindow" parent="AdwApplicationWindow">
+    <property name="title" translatable="no">Pixiv Powerful Viewer</property>
+    <property name="width-request">500</property>
+    <property name="height-request">400</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <property name="content">
+      <object class="GtkStack">
+        <property name="transition-type">crossfade</property>
+        <child>
+          <object class="GtkStackPage">
+            <property name="name">main</property>
+            <property name="child">
+              <object class="PpvCollectionView" />
+            </property>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+</interface>

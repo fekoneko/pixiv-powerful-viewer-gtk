@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/fekoneko/ppv/app/">
+    <file compressed="true" preprocess="xml-stripblanks">application_window.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">collection_view.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">explorer_panel.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">preview_panel.ui</file>
+  </gresource>
+</gresources>
