@@ -57,8 +57,8 @@ mod imp {
                 println!("Parsed collection structure with {} errors", errors.len());
                 while let Some(work) = collection_reader.next_work().await {
                     match work {
-                        Ok(work) => println!("Loaded work {}", work.title),
-                        Err(error) => println!("Failed to load work: {}", error),
+                        Ok(work) => println!("Loaded work {}", work.metadata.title),
+                        Err(error) => println!("Failed to load work: {:?}", error),
                     }
                 }
             }

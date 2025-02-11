@@ -37,10 +37,11 @@ impl CollectionReader {
                     continue;
                 };
                 let entry_path = entry.path();
+                // TODO: also parse works without metadata
                 let is_metafile = entry_path.file_name().is_some_and(|s| s == "metadata.yaml");
                 if entry.file_type().is_file() && is_metafile {
                     // TODO: do we need to use a thread pool here?
-                    join_handles.push(gio::spawn_blocking(move || Self::parse_work(&entry_path)));
+                    join_handles.push(gio::spawn_blocking(move || Self::parse_work(entry_path)));
                 }
             }
 
@@ -50,23 +51,13 @@ impl CollectionReader {
         .unwrap()
     }
 
-    fn parse_work(metafile_path: &PathBuf) -> Result<Work, WorkParseError> {
-        // TODO: expensive blocking logic goes here
-        // (check if it's actually that expensive or if it's just IO bound)
+    fn parse_work(metafile_path: PathBuf) -> Result<Work, WorkParseError> {
+        // TODO: check if this logic is actually that expensive
+        let file = fs::File::open(&metafile_path)?;
+        let metadata: WorkMetadata = serde_yaml::from_reader(file)?;
+        let path = metafile_path.parent().unwrap_or(Path::new("")).into();
 
-        let file = fs::File::open(metafile_path)?;
-        let work_metadata: WorkMetadata = serde_yaml::from_reader(file)?;
-
-        let work_dir_path = metafile_path.parent().unwrap_or(Path::new(""));
-
-        Ok(Work {
-            path: work_dir_path.to_string_lossy().into_owned(),
-            title: work_dir_path
-                .file_name()
-                .unwrap_or_default()
-                .to_string_lossy()
-                .into_owned(),
-        })
+        Ok(Work { path, metadata })
     }
 
     pub async fn next_work(&mut self) -> Option<Result<Work, WorkParseError>> {
