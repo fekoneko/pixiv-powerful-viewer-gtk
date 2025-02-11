@@ -1,0 +1,153 @@
+use chrono::prelude::*;
+use serde::{Deserialize, Deserializer};
+
+use crate::utils::serde::*;
+
+use super::{WorkMetadata, WorkMetadataAgeRestriction, WorkMetadataKind};
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PixivWorkMetadata {
+    #[serde(deserialize_with = "deserialize_string_to_usize")]
+    pub id: usize,
+    pub title: String,
+    pub illust_type: PixivWorkMetadataIllustType,
+    pub x_restrict: PixivWorkMetadataXRestrict,
+    #[serde(deserialize_with = "deserialize_string_to_usize")]
+    pub user_id: usize,
+    pub user_name: String,
+    pub page_count: usize,
+    #[serde(deserialize_with = "deserialize_date_time")]
+    pub upload_date: DateTime<Utc>,
+    pub ai_type: PixivWorkMetadataAiType,
+    pub bookmark_count: usize,
+    pub like_count: usize,
+    pub comment_count: usize,
+    pub view_count: usize,
+    pub is_original: bool,
+    pub description: String,
+    pub tags: PixivWorkMetadataTags,
+    // TODO: also think about this JSON fields:
+    // "seriesNavData": null,
+    // "isUnlisted": false,
+}
+
+impl Into<WorkMetadata> for PixivWorkMetadata {
+    fn into(self) -> WorkMetadata {
+        WorkMetadata {
+            id: self.id,
+            title: self.title,
+            kind: self.illust_type.into(),
+            age_restriction: self.x_restrict.into(),
+            user_id: self.user_id,
+            user_name: self.user_name,
+            page_count: self.page_count,
+            upload_time: self.upload_date,
+            download_time: None,
+            is_ai: self.ai_type.into(),
+            bookmark_count: self.bookmark_count,
+            like_count: self.like_count,
+            comment_count: self.comment_count,
+            view_count: self.view_count,
+            is_original: self.is_original,
+            description: self.description,
+            tags: self.tags.into(),
+        }
+    }
+}
+
+pub enum PixivWorkMetadataIllustType {
+    Illustration,
+    Manga,
+}
+
+impl<'de> Deserialize<'de> for PixivWorkMetadataIllustType {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        match u8::deserialize(deserializer)? {
+            0 => Ok(PixivWorkMetadataIllustType::Illustration),
+            1 => Ok(PixivWorkMetadataIllustType::Manga),
+            _ => Err(serde::de::Error::custom("invalid illustType")),
+        }
+    }
+}
+
+impl Into<WorkMetadataKind> for PixivWorkMetadataIllustType {
+    fn into(self) -> WorkMetadataKind {
+        match self {
+            PixivWorkMetadataIllustType::Illustration => WorkMetadataKind::Illustration,
+            PixivWorkMetadataIllustType::Manga => WorkMetadataKind::Manga,
+        }
+    }
+}
+
+pub enum PixivWorkMetadataXRestrict {
+    AllAges,
+    R18,
+    R18G,
+}
+
+impl<'de> Deserialize<'de> for PixivWorkMetadataXRestrict {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        match u8::deserialize(deserializer)? {
+            0 => Ok(PixivWorkMetadataXRestrict::AllAges),
+            1 => Ok(PixivWorkMetadataXRestrict::R18),
+            2 => Ok(PixivWorkMetadataXRestrict::R18G),
+            _ => Err(serde::de::Error::custom("invalid xRestrict")),
+        }
+    }
+}
+
+impl Into<WorkMetadataAgeRestriction> for PixivWorkMetadataXRestrict {
+    fn into(self) -> WorkMetadataAgeRestriction {
+        match self {
+            PixivWorkMetadataXRestrict::AllAges => WorkMetadataAgeRestriction::AllAges,
+            PixivWorkMetadataXRestrict::R18 => WorkMetadataAgeRestriction::R18,
+            PixivWorkMetadataXRestrict::R18G => WorkMetadataAgeRestriction::R18G,
+        }
+    }
+}
+
+pub enum PixivWorkMetadataAiType {
+    Unknown,
+    NotAi,
+    IsAi,
+}
+
+impl<'de> Deserialize<'de> for PixivWorkMetadataAiType {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        match u8::deserialize(deserializer)? {
+            0 => Ok(PixivWorkMetadataAiType::Unknown),
+            1 => Ok(PixivWorkMetadataAiType::NotAi),
+            2 => Ok(PixivWorkMetadataAiType::IsAi),
+            _ => Err(serde::de::Error::custom("invalid aiType")),
+        }
+    }
+}
+
+impl Into<Option<bool>> for PixivWorkMetadataAiType {
+    fn into(self) -> Option<bool> {
+        match self {
+            PixivWorkMetadataAiType::Unknown => None,
+            PixivWorkMetadataAiType::NotAi => Some(false),
+            PixivWorkMetadataAiType::IsAi => Some(true),
+        }
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PixivWorkMetadataTags {
+    pub tags: Vec<PixivWorkMetadataTagsTag>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PixivWorkMetadataTagsTag {
+    pub tag: String,
+}
+
+impl Into<Vec<String>> for PixivWorkMetadataTags {
+    fn into(self) -> Vec<String> {
+        self.tags.into_iter().map(|tag| tag.tag).collect()
+    }
+}
