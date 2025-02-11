@@ -5,27 +5,27 @@ use crate::utils::serde::*;
 
 #[derive(Serialize, Deserialize)]
 pub struct WorkMetadata {
-    pub id: usize,
-    pub title: String,
-    pub kind: WorkMetadataKind,
-    pub age_restriction: WorkMetadataAgeRestriction,
-    pub user_id: usize,
-    pub user_name: String,
-    pub page_count: usize,
-    #[serde(serialize_with = "serialize_date_time")]
-    #[serde(deserialize_with = "deserialize_date_time")]
-    pub upload_time: DateTime<Utc>,
+    pub id: Option<usize>,
+    pub title: Option<String>,
+    pub kind: Option<WorkMetadataKind>,
+    pub age_restriction: Option<WorkMetadataAgeRestriction>,
+    pub user_id: Option<usize>,
+    pub user_name: Option<String>,
+    pub page_count: Option<usize>,
+    #[serde(serialize_with = "serialize_date_time_option")]
+    #[serde(deserialize_with = "deserialize_date_time_option")]
+    pub upload_time: Option<DateTime<Utc>>,
     #[serde(serialize_with = "serialize_date_time_option")]
     #[serde(deserialize_with = "deserialize_date_time_option")]
     pub download_time: Option<DateTime<Utc>>,
     pub is_ai: Option<bool>,
-    pub bookmark_count: usize,
-    pub like_count: usize,
-    pub comment_count: usize,
-    pub view_count: usize,
-    pub is_original: bool,
-    pub description: String,
-    pub tags: Vec<String>,
+    pub bookmark_count: Option<usize>,
+    pub like_count: Option<usize>,
+    pub comment_count: Option<usize>,
+    pub view_count: Option<usize>,
+    pub is_original: Option<bool>,
+    pub description: Option<String>,
+    pub tags: Option<Vec<String>>,
 }
 
 pub enum WorkMetadataKind {

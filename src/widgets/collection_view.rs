@@ -57,7 +57,12 @@ mod imp {
                 println!("Parsed collection structure with {} errors", errors.len());
                 while let Some(work) = collection_reader.next_work().await {
                     match work {
-                        Ok(work) => println!("Loaded work {}", work.metadata.title),
+                        Ok(work) => {
+                            println!(
+                                "Loaded work {}",
+                                work.metadata.title.unwrap_or(String::from("Unknown"))
+                            )
+                        }
                         Err(error) => println!("Failed to load work: {:?}", error),
                     }
                 }

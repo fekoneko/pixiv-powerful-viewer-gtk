@@ -30,15 +30,14 @@ impl PixivDownloader {
     }
 
     pub fn download_work(&self, id: usize) -> Result<(), DownloadError> {
-        let mut work_metadata: WorkMetadata =
-            fetch_work_metadata(&self.agent, &self.session_id, id)?.into();
+        let pixiv_metadata = fetch_work_metadata(&self.agent, &self.session_id, id)?;
 
-        let user_dir_name = format!("{} ({})", work_metadata.user_name, work_metadata.user_id);
+        let user_dir_name = format!("{} ({})", pixiv_metadata.user_name, pixiv_metadata.user_id);
         let user_path = self.collection_path.join(user_dir_name);
         if !fs::exists(&user_path)? {
             fs::create_dir(&user_path)?;
         }
-        let work_dir_name = format!("{} ({})", work_metadata.title, work_metadata.id);
+        let work_dir_name = format!("{} ({})", pixiv_metadata.title, pixiv_metadata.id);
         let work_path = user_path.join(work_dir_name);
         if !fs::exists(&work_path)? {
             fs::create_dir(&work_path)?;
@@ -46,8 +45,9 @@ impl PixivDownloader {
 
         let metafile_path = work_path.join("metadata.yaml");
         let mut file = File::create(metafile_path)?;
-        work_metadata.download_time = Some(Utc::now().round_subsecs(0));
-        serde_yaml::to_writer(&mut file, &work_metadata)?;
+        let mut metadata: WorkMetadata = pixiv_metadata.into();
+        metadata.download_time = Some(Utc::now().round_subsecs(0));
+        serde_yaml::to_writer(&mut file, &metadata)?;
 
         let work_pages = fetch_work_pages(&self.agent, &self.session_id, id)?;
 

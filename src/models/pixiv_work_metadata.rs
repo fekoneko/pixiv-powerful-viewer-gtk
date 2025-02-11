@@ -35,23 +35,23 @@ pub struct PixivWorkMetadata {
 impl Into<WorkMetadata> for PixivWorkMetadata {
     fn into(self) -> WorkMetadata {
         WorkMetadata {
-            id: self.id,
-            title: self.title,
-            kind: self.illust_type.into(),
-            age_restriction: self.x_restrict.into(),
-            user_id: self.user_id,
-            user_name: self.user_name,
-            page_count: self.page_count,
-            upload_time: self.upload_date,
+            id: Some(self.id),
+            title: Some(self.title),
+            kind: Some(self.illust_type.into()),
+            age_restriction: Some(self.x_restrict.into()),
+            user_id: Some(self.user_id),
+            user_name: Some(self.user_name),
+            page_count: Some(self.page_count),
+            upload_time: Some(self.upload_date),
             download_time: None,
             is_ai: self.ai_type.into(),
-            bookmark_count: self.bookmark_count,
-            like_count: self.like_count,
-            comment_count: self.comment_count,
-            view_count: self.view_count,
-            is_original: self.is_original,
-            description: self.description,
-            tags: self.tags.into(),
+            bookmark_count: Some(self.bookmark_count),
+            like_count: Some(self.like_count),
+            comment_count: Some(self.comment_count),
+            view_count: Some(self.view_count),
+            is_original: Some(self.is_original),
+            description: Some(self.description),
+            tags: Some(self.tags.into()),
         }
     }
 }

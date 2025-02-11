@@ -49,3 +49,14 @@ pub fn deserialize_string_to_usize<'de, D: Deserializer<'de>>(
     let string = String::deserialize(deserializer)?;
     string.parse().map_err(serde::de::Error::custom)
 }
+
+pub fn deserialize_string_to_usize_option<'de, D: Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<usize>, D::Error> {
+    let string = Option::<String>::deserialize(deserializer)?;
+    if let Some(string) = string {
+        string.parse().map(Some).map_err(serde::de::Error::custom)
+    } else {
+        Ok(None)
+    }
+}
