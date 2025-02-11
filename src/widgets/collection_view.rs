@@ -58,10 +58,7 @@ mod imp {
                 while let Some(work) = collection_reader.next_work().await {
                     match work {
                         Ok(work) => {
-                            println!(
-                                "Loaded work {}",
-                                work.metadata.title.unwrap_or(String::from("Unknown"))
-                            )
+                            println!("Loaded work {}", work.title_or_fallback())
                         }
                         Err(error) => println!("Failed to load work: {:?}", error),
                     }
