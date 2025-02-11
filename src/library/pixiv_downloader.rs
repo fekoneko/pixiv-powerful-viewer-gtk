@@ -29,7 +29,7 @@ impl PixivDownloader {
         }
     }
 
-    pub fn download_work(&self, id: usize) -> Result<(), Error> {
+    pub fn download_work(&self, id: usize) -> Result<(), DownloadError> {
         let mut work_metadata: WorkMetadata =
             fetch_work_metadata(&self.agent, &self.session_id, id)?.into();
 
@@ -85,25 +85,25 @@ impl Default for WorkImageResolution {
 }
 
 #[derive(Debug)]
-pub enum Error {
+pub enum DownloadError {
     UreqError(ureq::Error),
     SerdeYamlError(serde_yaml::Error),
     IoError(io::Error),
 }
 
-impl From<ureq::Error> for Error {
+impl From<ureq::Error> for DownloadError {
     fn from(error: ureq::Error) -> Self {
         Self::UreqError(error)
     }
 }
 
-impl From<serde_yaml::Error> for Error {
+impl From<serde_yaml::Error> for DownloadError {
     fn from(error: serde_yaml::Error) -> Self {
         Self::SerdeYamlError(error)
     }
 }
 
-impl From<io::Error> for Error {
+impl From<io::Error> for DownloadError {
     fn from(error: io::Error) -> Self {
         Self::IoError(error)
     }
