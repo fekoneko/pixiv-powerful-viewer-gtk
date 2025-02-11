@@ -12,9 +12,11 @@ pub struct WorkMetadata {
     pub user_id: Option<usize>,
     pub user_name: Option<String>,
     pub page_count: Option<usize>,
+    #[serde(default)]
     #[serde(serialize_with = "serialize_date_time_option")]
     #[serde(deserialize_with = "deserialize_date_time_option")]
     pub upload_time: Option<DateTime<Utc>>,
+    #[serde(default)]
     #[serde(serialize_with = "serialize_date_time_option")]
     #[serde(deserialize_with = "deserialize_date_time_option")]
     pub download_time: Option<DateTime<Utc>>,
