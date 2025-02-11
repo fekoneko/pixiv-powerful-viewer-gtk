@@ -25,11 +25,9 @@ pub struct PixivWorkMetadata {
     pub comment_count: usize,
     pub view_count: usize,
     pub is_original: bool,
+    pub series_nav_data: Option<PixivWorkMetadataSeriesNavData>,
     pub description: String,
     pub tags: PixivWorkMetadataTags,
-    // TODO: also think about this JSON fields:
-    // "seriesNavData": null,
-    // "isUnlisted": false,
 }
 
 impl Into<WorkMetadata> for PixivWorkMetadata {
@@ -50,6 +48,9 @@ impl Into<WorkMetadata> for PixivWorkMetadata {
             comment_count: Some(self.comment_count),
             view_count: Some(self.view_count),
             is_original: Some(self.is_original),
+            series_id: self.series_nav_data.as_ref().map(|series| series.series_id),
+            series_order: self.series_nav_data.as_ref().map(|series| series.order),
+            series_title: self.series_nav_data.map(|series| series.title),
             description: Some(self.description),
             tags: Some(self.tags.into()),
         }
@@ -150,4 +151,13 @@ impl Into<Vec<String>> for PixivWorkMetadataTags {
     fn into(self) -> Vec<String> {
         self.tags.into_iter().map(|tag| tag.tag).collect()
     }
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PixivWorkMetadataSeriesNavData {
+    #[serde(deserialize_with = "deserialize_string_to_usize")]
+    pub series_id: usize,
+    pub order: usize,
+    pub title: String,
 }

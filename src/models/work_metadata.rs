@@ -24,6 +24,9 @@ pub struct WorkMetadata {
     pub comment_count: Option<usize>,
     pub view_count: Option<usize>,
     pub is_original: Option<bool>,
+    pub series_id: Option<usize>,
+    pub series_order: Option<usize>,
+    pub series_title: Option<String>,
     pub description: Option<String>,
     pub tags: Option<Vec<String>>,
 }
