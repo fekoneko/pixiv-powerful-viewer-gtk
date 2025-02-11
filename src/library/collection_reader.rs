@@ -36,6 +36,7 @@ impl CollectionReader {
                 let entry_path = entry.path();
                 let is_metafile = entry_path.file_name().is_some_and(|s| s == "metadata.yaml");
                 if entry.file_type().is_file() && is_metafile {
+                    // TODO: do we need to use a thread pool here?
                     join_handles.push(gio::spawn_blocking(move || Work::new(&entry_path)));
                 }
             }
