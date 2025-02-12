@@ -1,17 +1,18 @@
 use std::cell::Cell;
-use std::io;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+use std::{fs, io};
 
 use adw::gio;
+use jwalk::WalkDir;
 
-use super::work::Work;
+use crate::models::{Work, WorkMetadata};
 
 pub struct CollectionReader {
-    parse_work_join_handles: Cell<Vec<gio::JoinHandle<io::Result<Work>>>>,
+    parse_work_join_handles: Cell<Vec<gio::JoinHandle<Result<Work, WorkParseError>>>>,
 }
 
 impl CollectionReader {
-    pub async fn new(path: PathBuf) -> (Self, Vec<io::Error>) {
+    pub async fn new(path: PathBuf) -> (Self, Vec<jwalk::Error>) {
         let (parse_work_join_handles, errors) = Self::start_loading_works(path).await;
         let collection_reader = Self {
             parse_work_join_handles: Cell::new(parse_work_join_handles),
@@ -22,44 +23,27 @@ impl CollectionReader {
 
     async fn start_loading_works(
         path: PathBuf,
-    ) -> (Vec<gio::JoinHandle<io::Result<Work>>>, Vec<io::Error>) {
-        fn parse_dir(
-            dir_path: &PathBuf,
-            errors: &mut Vec<io::Error>,
-            join_handles: &mut Vec<gio::JoinHandle<io::Result<Work>>>,
-        ) {
-            let entries = dir_path.read_dir();
-            let Ok(entries) = entries else {
-                errors.push(entries.unwrap_err());
-                return;
-            };
+    ) -> (
+        Vec<gio::JoinHandle<Result<Work, WorkParseError>>>,
+        Vec<jwalk::Error>,
+    ) {
+        gio::spawn_blocking(move || {
+            let mut errors = Vec::new();
+            let mut join_handles = Vec::new();
 
-            for entry in entries {
+            for entry in WalkDir::new(&path) {
                 let Ok(entry) = entry else {
                     errors.push(entry.unwrap_err());
                     continue;
                 };
-                let entry_type = entry.file_type();
-                let Ok(entry_type) = entry_type else {
-                    errors.push(entry_type.unwrap_err());
-                    continue;
-                };
-                let path = entry.path();
-                if entry_type.is_dir() {
-                    parse_dir(&path, errors, join_handles);
-                    continue;
-                }
-                let is_metafile = path.to_str().is_some_and(|s| s.ends_with("-meta.txt"));
-                if entry_type.is_file() && is_metafile {
-                    join_handles.push(gio::spawn_blocking(move || Work::new(&path)));
+                let entry_path = entry.path();
+                // TODO: also parse works without metadata
+                let is_metafile = entry_path.file_name().is_some_and(|s| s == "metadata.yaml");
+                if entry.file_type().is_file() && is_metafile {
+                    // TODO: do we need to use a thread pool here?
+                    join_handles.push(gio::spawn_blocking(move || Self::parse_work(entry_path)));
                 }
             }
-        }
-
-        gio::spawn_blocking(move || {
-            let mut errors = Vec::new();
-            let mut join_handles = Vec::new();
-            parse_dir(&path, &mut errors, &mut join_handles);
 
             (join_handles, errors)
         })
@@ -67,10 +51,37 @@ impl CollectionReader {
         .unwrap()
     }
 
-    pub async fn next_work(&mut self) -> Option<io::Result<Work>> {
+    fn parse_work(metafile_path: PathBuf) -> Result<Work, WorkParseError> {
+        // TODO: check if this logic is actually that expensive
+        let file = fs::File::open(&metafile_path)?;
+        let metadata: WorkMetadata = serde_yaml::from_reader(file)?;
+        let path = metafile_path.parent().unwrap_or(Path::new("")).into();
+
+        Ok(Work { path, metadata })
+    }
+
+    pub async fn next_work(&mut self) -> Option<Result<Work, WorkParseError>> {
         match self.parse_work_join_handles.get_mut().pop() {
-            Some(join_handle) => return Some(join_handle.await.unwrap()),
-            None => return None,
+            Some(join_handle) => Some(join_handle.await.unwrap()),
+            None => None,
         }
+    }
+}
+
+#[derive(Debug)]
+pub enum WorkParseError {
+    IoError(io::Error),
+    SerdeYamlError(serde_yaml::Error),
+}
+
+impl From<io::Error> for WorkParseError {
+    fn from(error: io::Error) -> Self {
+        Self::IoError(error)
+    }
+}
+
+impl From<serde_yaml::Error> for WorkParseError {
+    fn from(error: serde_yaml::Error) -> Self {
+        Self::SerdeYamlError(error)
     }
 }

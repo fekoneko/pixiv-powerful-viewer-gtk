@@ -1,2 +1,2 @@
 pub mod collection_reader;
-pub mod work;
+pub mod pixiv_downloader;

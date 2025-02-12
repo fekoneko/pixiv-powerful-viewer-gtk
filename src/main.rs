@@ -1,4 +1,6 @@
 mod library;
+mod models;
+mod utils;
 mod widgets;
 
 use adw::prelude::*;

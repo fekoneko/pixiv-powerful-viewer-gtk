@@ -5,7 +5,12 @@ edition = "2021"
 
 [dependencies]
 adw = { version = "0.7.1", package = "libadwaita", features = ["v1_5"] }
+chrono = { version = "0.4.39" }
 gtk = { version = "0.9.5", package = "gtk4", features = ["v4_14"] }
+jwalk = "0.8.1"
+serde = { version = "1.0.217", features = ["derive"] }
+serde_yaml = "0.9.34"
+ureq = { version = "3.0.5", features = ["json"] }
 
 [build-dependencies]
 glib-build-tools = "0.20.0"

@@ -8,8 +8,9 @@ The app is still very much work in progress. I'm rewriting the previous [Tauri v
 - Native look in Linux GNOME environmet (while still working on any other platform)
 - Fewer dependencies and reduced memory consumtion
 
-I also plan to implement [my own version](https://github.com/fekoneko/pixiv-downloader-prototype) of batch downloader integrated into the app.
+I also plan to implement my own version of batch downloader integrated into the app.
 
 - No need to depend on the third party downloader (which is only available in Chromium)
-- Custom downloader will allow for saving all needed metadata in the more wide-spread format (YAML)
+- Custom downloader will allow for saving more useful metadata, such as series data
+- Convenient YAML format
 - Directory structure and filenames will remain human-friendly as they were in the previous version + no weird caches outside the collection directory
