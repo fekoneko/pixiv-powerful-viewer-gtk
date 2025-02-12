@@ -1,11 +1,12 @@
 mod library;
 mod models;
+mod objects;
 mod utils;
 mod widgets;
 
 use adw::prelude::*;
 use adw::{gio, glib, Application};
-use widgets::application_window::ApplicationWindow;
+use widgets::ApplicationWindow;
 
 const APP_ID: &str = "com.fekoneko.ppv.app";
 

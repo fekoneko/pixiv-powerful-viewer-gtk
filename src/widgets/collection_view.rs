@@ -9,8 +9,7 @@ mod imp {
     use gtk::FileDialog;
 
     use crate::library::collection_reader::CollectionReader;
-    use crate::widgets::explorer_panel::ExplorerPanel;
-    use crate::widgets::preview_panel::PreviewPanel;
+    use crate::widgets::{ExplorerPanel, PreviewPanel};
 
     #[derive(CompositeTemplate, Default)]
     #[template(resource = "/com/fekoneko/ppv/app/collection_view.ui")]

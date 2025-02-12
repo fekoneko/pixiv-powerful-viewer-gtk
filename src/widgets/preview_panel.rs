@@ -28,6 +28,8 @@ mod imp {
     impl ObjectImpl for PreviewPanel {}
     impl WidgetImpl for PreviewPanel {}
     impl BoxImpl for PreviewPanel {}
+
+    impl PreviewPanel {}
 }
 
 glib::wrapper! {

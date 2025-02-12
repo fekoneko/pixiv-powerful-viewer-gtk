@@ -1,14 +1,22 @@
 use adw::glib;
 
 mod imp {
+    use adw::gio;
     use adw::glib;
+    use adw::prelude::*;
     use adw::subclass::prelude::*;
     use glib::subclass::InitializingObject;
     use gtk::CompositeTemplate;
+    use gtk::SignalListItemFactory;
+
+    use crate::objects::ListItemState;
 
     #[derive(CompositeTemplate, Default)]
     #[template(resource = "/com/fekoneko/ppv/app/explorer_panel.ui")]
-    pub struct ExplorerPanel {}
+    pub struct ExplorerPanel {
+        #[template_child]
+        works_list_scrolled_window: TemplateChild<gtk::ScrolledWindow>,
+    }
 
     #[glib::object_subclass]
     impl ObjectSubclass for ExplorerPanel {
@@ -25,9 +33,49 @@ mod imp {
         }
     }
 
-    impl ObjectImpl for ExplorerPanel {}
+    impl ObjectImpl for ExplorerPanel {
+        fn constructed(&self) {
+            let item_states: Vec<_> = (0..1_000_000).map(|i| ListItemState::new(i)).collect();
+            let model = gio::ListStore::new::<ListItemState>();
+            model.extend_from_slice(&item_states);
+
+            let item_factory = SignalListItemFactory::new();
+
+            item_factory.connect_setup(move |_, item| {
+                let label = gtk::Label::new(None);
+                item.downcast_ref::<gtk::ListItem>()
+                    .unwrap()
+                    .set_child(Some(&label));
+            });
+
+            item_factory.connect_bind(move |_, list_item| {
+                let item_state = list_item
+                    .downcast_ref::<gtk::ListItem>()
+                    .unwrap()
+                    .item()
+                    .and_downcast::<ListItemState>()
+                    .unwrap();
+
+                let label = list_item
+                    .downcast_ref::<gtk::ListItem>()
+                    .unwrap()
+                    .child()
+                    .and_downcast::<gtk::Label>()
+                    .unwrap();
+
+                label.set_label(&item_state.index().to_string());
+            });
+
+            let selection_model = gtk::SingleSelection::new(Some(model));
+            let works_list = gtk::ListView::new(Some(selection_model), Some(item_factory));
+            self.works_list_scrolled_window.set_child(Some(&works_list));
+        }
+    }
+
     impl WidgetImpl for ExplorerPanel {}
     impl BoxImpl for ExplorerPanel {}
+
+    impl ExplorerPanel {}
 }
 
 glib::wrapper! {

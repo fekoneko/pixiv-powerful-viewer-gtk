@@ -8,7 +8,7 @@ mod imp {
     use glib::subclass::InitializingObject;
     use gtk::CompositeTemplate;
 
-    use crate::widgets::collection_view::CollectionView;
+    use crate::widgets::CollectionView;
 
     #[derive(CompositeTemplate, Default)]
     #[template(resource = "/com/fekoneko/ppv/app/application_window.ui")]
@@ -35,6 +35,8 @@ mod imp {
     impl WindowImpl for ApplicationWindow {}
     impl ApplicationWindowImpl for ApplicationWindow {}
     impl AdwApplicationWindowImpl for ApplicationWindow {}
+
+    impl ApplicationWindow {}
 }
 
 glib::wrapper! {
