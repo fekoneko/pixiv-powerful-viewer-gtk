@@ -1,4 +1,4 @@
-use adw::glib;
+use adw::{glib, subclass::prelude::ObjectSubclassIsExt};
 
 mod imp {
     use adw::glib;
@@ -8,7 +8,10 @@ mod imp {
 
     #[derive(CompositeTemplate, Default)]
     #[template(resource = "/com/fekoneko/ppv/app/work_card.ui")]
-    pub struct WorkCard {}
+    pub struct WorkCard {
+        #[template_child]
+        pub work_index_label: TemplateChild<gtk::Label>,
+    }
 
     #[glib::object_subclass]
     impl ObjectSubclass for WorkCard {
@@ -44,6 +47,6 @@ impl WorkCard {
     }
 
     pub fn display_work_with_index(&self, index: i32) {
-        println!("display_work_with_index({})", index)
+        self.imp().work_index_label.set_label(&index.to_string());
     }
 }

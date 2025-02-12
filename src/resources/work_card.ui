@@ -5,6 +5,9 @@
     <child>
       <object class="GtkFrame">
         <property name="height-request">100</property>
+        <child>
+          <object class="GtkLabel" id="work_index_label"></object>
+        </child>
       </object>
     </child>
   </template>
