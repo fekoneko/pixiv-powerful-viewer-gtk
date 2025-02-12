@@ -11,7 +11,7 @@ mod imp {
     #[properties(wrapper_type = super::ListItemState)]
     pub struct ListItemState {
         #[property(get, set)]
-        index: Cell<i32>,
+        index: Cell<u64>,
     }
 
     #[glib::object_subclass]
@@ -29,7 +29,7 @@ glib::wrapper! {
 }
 
 impl ListItemState {
-    pub fn new(index: i32) -> Self {
+    pub fn new(index: u64) -> Self {
         glib::Object::builder().property("index", index).build()
     }
 }

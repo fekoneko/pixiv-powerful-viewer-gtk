@@ -46,7 +46,7 @@ impl WorkCard {
         glib::Object::new()
     }
 
-    pub fn display_work_with_index(&self, index: i32) {
+    pub fn display_work_with_index(&self, index: u64) {
         self.imp().work_index_label.set_label(&index.to_string());
     }
 }
