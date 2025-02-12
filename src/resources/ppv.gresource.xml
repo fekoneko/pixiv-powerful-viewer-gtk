@@ -5,5 +5,6 @@
     <file compressed="true" preprocess="xml-stripblanks">collection_view.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">explorer_panel.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">preview_panel.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">work_card.ui</file>
   </gresource>
 </gresources>

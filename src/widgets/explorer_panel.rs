@@ -10,6 +10,7 @@ mod imp {
     use gtk::SignalListItemFactory;
 
     use crate::objects::ListItemState;
+    use crate::widgets::WorkCard;
 
     #[derive(CompositeTemplate, Default)]
     #[template(resource = "/com/fekoneko/ppv/app/explorer_panel.ui")]
@@ -42,10 +43,10 @@ mod imp {
             let item_factory = SignalListItemFactory::new();
 
             item_factory.connect_setup(move |_, item| {
-                let label = gtk::Label::new(None);
+                let work_card = WorkCard::new();
                 item.downcast_ref::<gtk::ListItem>()
                     .unwrap()
-                    .set_child(Some(&label));
+                    .set_child(Some(&work_card));
             });
 
             item_factory.connect_bind(move |_, list_item| {
@@ -56,14 +57,14 @@ mod imp {
                     .and_downcast::<ListItemState>()
                     .unwrap();
 
-                let label = list_item
+                let work_card = list_item
                     .downcast_ref::<gtk::ListItem>()
                     .unwrap()
                     .child()
-                    .and_downcast::<gtk::Label>()
+                    .and_downcast::<WorkCard>()
                     .unwrap();
 
-                label.set_label(&item_state.index().to_string());
+                work_card.display_work_with_index(item_state.index());
             });
 
             let selection_model = gtk::SingleSelection::new(Some(model));
