@@ -17,4 +17,16 @@ impl Work {
                 .unwrap_or("Unknown"),
         )
     }
+
+    pub fn user_name_or_fallback(&self) -> &str {
+        self.metadata.user_name.as_deref().unwrap_or(
+            self.path
+                .parent()
+                .map(|parent| parent.file_name())
+                .flatten()
+                .map(|name| name.to_str())
+                .flatten()
+                .unwrap_or("Unknown"),
+        )
+    }
 }
